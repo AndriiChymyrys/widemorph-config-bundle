@@ -4,9 +4,15 @@ declare(strict_types=1);
 
 namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish;
 
+/**
+ * Class BundleCrawlerServiceInterface
+ *
+ * @package WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish
+ */
 interface BundleCrawlerServiceInterface
 {
-    public const WM_BUNDLE_FILE_PATH = 'config/wm_bundles.php';
-
+    /**
+     * @return void
+     */
     public function crawl(): void;
 }

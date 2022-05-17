@@ -14,11 +14,9 @@ use JetBrains\PhpStorm\ArrayShape;
 class PublishEntityService extends AbstractPublish implements PublishEntityServiceInterface
 {
     /**
-     * @param string $bundleNameSpace
-     * @param string $publishBundlePath
-     * @param array $bundleConfig
+     * {@inheritDoc}
      *
-     * @return void
+     * @throws \ReflectionException
      */
     public function run(
         string $bundleNameSpace,
@@ -44,21 +42,33 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getType(): string
     {
         return static::PUBLISH_ENTITY_NAME;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPublishFromPath(): string
     {
         return static::ENTITY_PUBLISH_FROM_PATH;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getPublishToPath(): string
     {
         return static::ENTITY_PUBLISH_TO_PATH;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getBundleNamespace(): string
     {
         return static::ENTITY_BUNDLE_NAMESPACE;
@@ -88,6 +98,11 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         ];
     }
 
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
     protected function getTableName(string $name): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));

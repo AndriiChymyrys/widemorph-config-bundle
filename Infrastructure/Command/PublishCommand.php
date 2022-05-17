@@ -36,7 +36,6 @@ class PublishCommand extends Command
         OutputInterface $output
     ): int {
         $this->domainInteraction->getBundleCrawlerService()->crawl();
-//        $this->domainInteraction->getPublishFactory()->getService('entity')->execute();
 
         return Command::SUCCESS;
     }

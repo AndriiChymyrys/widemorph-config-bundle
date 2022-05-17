@@ -8,12 +8,27 @@ use ReflectionClass;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface;
 
+/**
+ * Class AbstractPublish
+ *
+ * @package WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type
+ */
 abstract class AbstractPublish implements PublishInterface
 {
+    /**
+     * @param FileManagerInterface $fileManager
+     * @param GeneratorInterface $generator
+     */
     public function __construct(protected FileManagerInterface $fileManager, protected GeneratorInterface $generator)
     {
     }
 
+    /**
+     * @param string $bundleNameSpace
+     * @param array $bundleConfig
+     *
+     * @return void
+     */
     public function execute(string $bundleNameSpace, array $bundleConfig): void
     {
         $publishBundlePath = $this->fileManager->getPublishBundlePath(
@@ -26,6 +41,13 @@ abstract class AbstractPublish implements PublishInterface
         }
     }
 
+    /**
+     * @param string $bundleNameSpace
+     * @param string $publishBundlePath
+     * @param array $bundleConfig
+     *
+     * @return void
+     */
     public function run(
         string $bundleNameSpace,
         string $publishBundlePath,
@@ -34,6 +56,14 @@ abstract class AbstractPublish implements PublishInterface
         $this->generator->simpleCopy($publishBundlePath, $this->getPublishToPath());
     }
 
+    /**
+     * @param string $bundleNameSpace
+     * @param string $fileName
+     *
+     * @return ReflectionClass
+     *
+     * @throws \ReflectionException
+     */
     protected function getClassReflection(
         string $bundleNameSpace,
         string $fileName

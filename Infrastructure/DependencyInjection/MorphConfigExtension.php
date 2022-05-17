@@ -9,8 +9,16 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+/**
+ * Class MorphConfigExtension
+ *
+ * @package WideMorph\Morph\Bundle\MorphConfigBundle\Infrastructure\DependencyInjection
+ */
 class MorphConfigExtension extends Extension
 {
+    /**
+     * {@inheritDoc}
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader(

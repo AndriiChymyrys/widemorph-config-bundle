@@ -4,16 +4,31 @@ declare(strict_types=1);
 
 namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish;
 
+/**
+ * Class BundleCrawlerService
+ *
+ * @package WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish
+ */
 class BundleCrawlerService implements BundleCrawlerServiceInterface
 {
+    /**
+     * @var array
+     */
     protected array $wmBundles;
 
+    /**
+     * @param FileManagerInterface $fileManager
+     * @param PublishFactoryInterface $publishFactory
+     */
     public function __construct(
         protected FileManagerInterface $fileManager,
         protected PublishFactoryInterface $publishFactory
     ) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function crawl(): void
     {
         $this->fetchWmBundles();
@@ -26,17 +41,11 @@ class BundleCrawlerService implements BundleCrawlerServiceInterface
         }
     }
 
+    /**
+     * @return void
+     */
     protected function fetchWmBundles(): void
     {
-        $this->wmBundles = require $this->getWmBundleFilePath();
-    }
-
-    protected function getWmBundleFilePath(): string
-    {
-        return sprintf(
-            '%s/%s',
-            $this->fileManager->getProjectDir(),
-            self::WM_BUNDLE_FILE_PATH
-        );
+        $this->wmBundles = require $this->fileManager->getWmBundleFilePath();
     }
 }

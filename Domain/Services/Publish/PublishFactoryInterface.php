@@ -6,6 +6,11 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish;
 
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishInterface;
 
+/**
+ * Class PublishFactoryInterface
+ *
+ * @package WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish
+ */
 interface PublishFactoryInterface
 {
     /**
