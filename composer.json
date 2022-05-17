@@ -1,0 +1,11 @@
+{
+    "name": "widemorph/morph-config-bundle",
+    "autoload": {
+        "psr-4": {
+            "WideMorph\\Morph\\Bundle\\MorphConfigBundle\\": ""
+        }
+    },
+    "require": {
+        "symfony/filesystem": "6.0.*"
+    }
+}

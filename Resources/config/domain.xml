@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\AbstractPublish"
+                 abstract="true">
+            <argument type="service"
+                      key="$fileManager"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface"/>
+            <argument type="service"
+                      key="$generator"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface"/>
+        </service>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityService"
+                 parent="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\AbstractPublish"/>
+        <service
+                id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityServiceInterface"
+                alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityService"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactory">
+            <argument type="service"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityServiceInterface"/>
+        </service>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactoryInterface"
+                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactory"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\BundleCrawlerService">
+            <argument type="service"
+                      key="$fileManager"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface"/>
+            <argument type="service"
+                      key="$publishFactory"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactoryInterface"/>
+        </service>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\BundleCrawlerServiceInterface"
+                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\BundleCrawlerService"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManager">
+            <argument key="$projectDir">%kernel.project_dir%</argument>
+            <argument type="service" key="$fileSystem" id="Symfony\Component\Filesystem\Filesystem"/>
+        </service>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface"
+                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManager"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Generator">
+            <argument type="service" key="$fileManager"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface"/>
+        </service>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface"
+                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Generator"/>
+    </services>
+</container>
