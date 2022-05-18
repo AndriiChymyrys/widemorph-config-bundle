@@ -12,15 +12,12 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish;
 class BundleCrawlerService implements BundleCrawlerServiceInterface
 {
     /**
-     * @var array
-     */
-    protected array $wmBundles;
-
-    /**
+     * @param array $wmBundles
      * @param FileManagerInterface $fileManager
      * @param PublishFactoryInterface $publishFactory
      */
     public function __construct(
+        protected array $wmBundles,
         protected FileManagerInterface $fileManager,
         protected PublishFactoryInterface $publishFactory
     ) {
@@ -31,21 +28,12 @@ class BundleCrawlerService implements BundleCrawlerServiceInterface
      */
     public function crawl(): void
     {
-        $this->fetchWmBundles();
         $publish = $this->publishFactory->getAll();
 
-        foreach ($this->wmBundles as $name => $config) {
+        foreach ($this->wmBundles as $namespace => $config) {
             foreach ($publish as $service) {
-                $service->execute($name, $config);
+                $service->execute($namespace, $config);
             }
         }
-    }
-
-    /**
-     * @return void
-     */
-    protected function fetchWmBundles(): void
-    {
-        $this->wmBundles = require $this->fileManager->getWmBundleFilePath();
     }
 }

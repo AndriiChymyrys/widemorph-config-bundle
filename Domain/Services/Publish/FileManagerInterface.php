@@ -14,9 +14,6 @@ interface FileManagerInterface
     /** @var string */
     public const TEMPLATE_PATH = 'Resources/tpl';
 
-    /** @var string */
-    public const WM_BUNDLE_FILE_PATH = 'config/wm_bundles.php';
-
     /**
      * @return string
      */
@@ -74,9 +71,4 @@ interface FileManagerInterface
      * @return void
      */
     public function dumpFile(string $fileName, string $content): void;
-
-    /**
-     * @return string
-     */
-    public function getWmBundleFilePath(): string;
 }

@@ -99,16 +99,4 @@ class FileManager implements FileManagerInterface
     {
         $this->fileSystem->dumpFile($fileName, $content);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getWmBundleFilePath(): string
-    {
-        return sprintf(
-            '%s/%s',
-            $this->getProjectDir(),
-            static::WM_BUNDLE_FILE_PATH
-        );
-    }
 }
