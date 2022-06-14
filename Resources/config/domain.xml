@@ -13,6 +13,9 @@
             <argument type="service"
                       key="$generator"
                       id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface"/>
+            <argument type="service"
+                      key="$externalBundleConfig"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface"/>
         </service>
 
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityService"
@@ -53,5 +56,10 @@
         </service>
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface"
                  alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Generator"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfig">
+        </service>
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface"
+                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfig"/>
     </services>
 </container>

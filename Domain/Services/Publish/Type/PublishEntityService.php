@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 
+use ReflectionClass;
 use JetBrains\PhpStorm\ArrayShape;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
 
 /**
  * Class PublishEntityService
@@ -81,7 +83,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         'baseClassName' => 'string',
         'tableName' => 'string',
     ])]
-    protected function preparePlaceholders(\ReflectionClass $reflectionClass): array
+    protected function preparePlaceholders(ReflectionClass $reflectionClass): array
     {
         $baseClassName = 'Base' . $reflectionClass->getShortName();
         $useStatements = [
@@ -94,17 +96,29 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
             'useStatements' => implode(PHP_EOL, $useStatements),
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
-            'tableName' => $this->getTableName($reflectionClass->getShortName()),
+            'tableName' => $this->getTableName($reflectionClass),
         ];
     }
 
     /**
-     * @param string $name
+     * @param ReflectionClass $reflectionClass
      *
      * @return string
      */
-    protected function getTableName(string $name): string
+    protected function getTableName(ReflectionClass $reflectionClass): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
+        $tableName = $this->getExternalConfigValue(
+                $reflectionClass,
+                ExternalBundleConfigInterface::DB_TABLE_NAME
+            ) ?? $reflectionClass->getShortName();
+
+        $tablePrefix = $this->getExternalConfigValue(
+                $reflectionClass,
+                ExternalBundleConfigInterface::DB_PREFIX_SETTING_NAME
+            ) ?? '';
+
+        $tableName = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $tableName));
+
+        return sprintf('%s_%s', $tablePrefix, $tableName);
     }
 }

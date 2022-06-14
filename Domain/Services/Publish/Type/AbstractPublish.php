@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 
 use ReflectionClass;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface;
 
@@ -18,9 +19,13 @@ abstract class AbstractPublish implements PublishInterface
     /**
      * @param FileManagerInterface $fileManager
      * @param GeneratorInterface $generator
+     * @param ExternalBundleConfigInterface $externalBundleConfig
      */
-    public function __construct(protected FileManagerInterface $fileManager, protected GeneratorInterface $generator)
-    {
+    public function __construct(
+        protected FileManagerInterface $fileManager,
+        protected GeneratorInterface $generator,
+        protected ExternalBundleConfigInterface $externalBundleConfig
+    ) {
     }
 
     /**
@@ -78,5 +83,22 @@ abstract class AbstractPublish implements PublishInterface
             );
 
         return new ReflectionClass($namespace);
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @param string|null $configKey
+     *
+     * @return mixed
+     */
+    protected function getExternalConfigValue(ReflectionClass $reflectionClass, ?string $configKey = null): mixed
+    {
+        $configValue = $this->externalBundleConfig->get($reflectionClass->getName(), $configKey);
+
+        if (!$configValue) {
+            $configValue = $this->externalBundleConfig->get($reflectionClass->getNamespaceName(), $configKey);
+        }
+
+        return $configValue;
     }
 }

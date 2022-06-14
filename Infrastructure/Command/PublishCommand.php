@@ -35,6 +35,7 @@ class PublishCommand extends Command
         InputInterface $input,
         OutputInterface $output
     ): int {
+        // TODO: add $output to crawl() and add command execution logs, or create some service for this
         $this->domainInteraction->getBundleCrawlerService()->crawl();
 
         return Command::SUCCESS;
