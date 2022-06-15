@@ -21,7 +21,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
      * @throws \ReflectionException
      */
     public function run(
-        string $bundleNameSpace,
+        string $bundleFileNameSpace,
         string $publishBundlePath,
         array $bundleConfig
     ): void {
@@ -29,7 +29,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
 
         foreach ($files as $fileName) {
             $reflection = $this->getClassReflection(
-                $bundleNameSpace,
+                $bundleFileNameSpace,
                 $fileName
             );
 
@@ -49,7 +49,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
      */
     public function getType(): string
     {
-        return static::PUBLISH_ENTITY_NAME;
+        return static::PUBLISH_ENTITY_TYPE;
     }
 
     /**

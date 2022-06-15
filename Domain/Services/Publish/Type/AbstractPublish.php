@@ -47,14 +47,14 @@ abstract class AbstractPublish implements PublishInterface
     }
 
     /**
-     * @param string $bundleNameSpace
+     * @param string $bundleFileNameSpace
      * @param string $publishBundlePath
      * @param array $bundleConfig
      *
      * @return void
      */
     public function run(
-        string $bundleNameSpace,
+        string $bundleFileNameSpace,
         string $publishBundlePath,
         array $bundleConfig
     ): void {

@@ -20,7 +20,7 @@ class PublishFactory implements PublishFactoryInterface
     protected array $publish;
 
     /**
-     * @param  PublishInterface  ...$publish
+     * @param PublishInterface ...$publish
      */
     public function __construct(PublishInterface ...$publish)
     {
@@ -40,7 +40,7 @@ class PublishFactory implements PublishFactoryInterface
             }
         }
 
-        throw new PublishServiceNotFoundException();
+        throw new PublishServiceNotFoundException(sprintf('Publish service for "%s" type not found', $type));
     }
 
     /**

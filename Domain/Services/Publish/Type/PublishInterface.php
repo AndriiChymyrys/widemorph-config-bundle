@@ -11,18 +11,6 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
  */
 interface PublishInterface
 {
-    /** @var string */
-    public const PUBLISH_ENTITY_NAME = 'entity';
-
-    /** @var string */
-    public const ENTITY_PUBLISH_FROM_PATH = 'Infrastructure/Entity';
-
-    /** @var string */
-    public const ENTITY_PUBLISH_TO_PATH = 'Entity';
-
-    /** @var string */
-    public const ENTITY_BUNDLE_NAMESPACE = 'Infrastructure\\Entity';
-
     /**
      * @param string $bundleNameSpace
      * @param array $bundleConfig

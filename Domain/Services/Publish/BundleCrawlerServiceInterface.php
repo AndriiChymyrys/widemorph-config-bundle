@@ -15,4 +15,11 @@ interface BundleCrawlerServiceInterface
      * @return void
      */
     public function crawl(): void;
+
+    /**
+     * @param string $type
+     *
+     * @return void
+     */
+    public function crawlType(string $type): void;
 }

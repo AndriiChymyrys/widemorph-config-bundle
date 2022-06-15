@@ -36,4 +36,16 @@ class BundleCrawlerService implements BundleCrawlerServiceInterface
             }
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function crawlType(string $type): void
+    {
+        $service = $this->publishFactory->getServiceByType($type);
+
+        foreach ($this->wmBundles as $namespace => $config) {
+            $service->execute($namespace, $config);
+        }
+    }
 }

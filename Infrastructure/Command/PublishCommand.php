@@ -6,6 +6,7 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Infrastructure\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Interaction\DomainInteractionInterface;
@@ -17,7 +18,7 @@ use WideMorph\Morph\Bundle\MorphConfigBundle\Interaction\DomainInteractionInterf
 class PublishCommand extends Command
 {
     /**
-     * @param  DomainInteractionInterface  $domainInteraction
+     * @param DomainInteractionInterface $domainInteraction
      */
     public function __construct(
         protected DomainInteractionInterface $domainInteraction
@@ -26,8 +27,22 @@ class PublishCommand extends Command
     }
 
     /**
-     * @param  InputInterface   $input
-     * @param  OutputInterface  $output
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        $this
+            ->addOption(
+                'type',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Specify type to publish (entity|repository)'
+            );
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
      *
      * @return int
      */
@@ -36,7 +51,11 @@ class PublishCommand extends Command
         OutputInterface $output
     ): int {
         // TODO: add $output to crawl() and add command execution logs, or create some service for this
-        $this->domainInteraction->getBundleCrawlerService()->crawl();
+        if ($type = $input->getOption('type')) {
+            $this->domainInteraction->getBundleCrawlerService()->crawlType($type);
+        } else {
+            $this->domainInteraction->getBundleCrawlerService()->crawl();
+        }
 
         return Command::SUCCESS;
     }

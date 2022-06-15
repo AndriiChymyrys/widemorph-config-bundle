@@ -24,9 +24,17 @@
                 id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityServiceInterface"
                 alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityService"/>
 
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishRepositoryService"
+                 parent="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\AbstractPublish"/>
+        <service
+                id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishRepositoryServiceInterface"
+                alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishRepositoryService"/>
+
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactory">
             <argument type="service"
                       id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityServiceInterface"/>
+            <argument type="service"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishRepositoryServiceInterface"/>
         </service>
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactoryInterface"
                  alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactory"/>
