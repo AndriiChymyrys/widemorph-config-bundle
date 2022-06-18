@@ -15,7 +15,7 @@ interface ExternalBundleConfigInterface
     public const DB_PREFIX_SETTING_NAME = 'db_table_prefix';
 
     /** @var string */
-    public const DB_TABLE_NAME = 'table_name';
+    public const DB_TABLE_SETTING_NAME = 'table_name';
 
     /**
      * @param string $key Class namespace or class full name

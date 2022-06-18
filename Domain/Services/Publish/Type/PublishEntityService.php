@@ -7,6 +7,7 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 use ReflectionClass;
 use JetBrains\PhpStorm\ArrayShape;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FilePathInterface;
 
 /**
  * Class PublishEntityService
@@ -21,27 +22,24 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
      * @throws \ReflectionException
      */
     public function run(
+        FilePathInterface $filePath,
         string $bundleFileNameSpace,
         string $publishBundlePath,
         array $bundleConfig
     ): void {
-        $files = $this->fileManager->scanDir($publishBundlePath);
+        $reflection = $this->getClassReflection(
+            $bundleFileNameSpace,
+            $filePath->getRelativeNameSpace()
+        );
 
-        foreach ($files as $fileName) {
-            $reflection = $this->getClassReflection(
-                $bundleFileNameSpace,
-                $fileName
-            );
+        $placeholders = $this->preparePlaceholders($reflection, $filePath);
 
-            $placeholders = $this->preparePlaceholders($reflection);
-
-            $this->generator->generateFile(
-                $fileName,
-                $this->getPublishToPath(),
-                $placeholders,
-                $this->getType() . '.tpl.php'
-            );
-        }
+        $this->generator->generateFile(
+            $filePath->getRelativePath(),
+            $this->getPublishToPath(),
+            $placeholders,
+            $this->getType() . '.tpl.php'
+        );
     }
 
     /**
@@ -83,7 +81,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         'baseClassName' => 'string',
         'tableName' => 'string',
     ])]
-    protected function preparePlaceholders(ReflectionClass $reflectionClass): array
+    protected function preparePlaceholders(ReflectionClass $reflectionClass, FilePathInterface $filePath): array
     {
         $baseClassName = 'Base' . $reflectionClass->getShortName();
         $useStatements = [
@@ -92,7 +90,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         ];
 
         return [
-            'namespace' => 'App\\Entity',
+            'namespace' => 'App\\Entity' . $filePath->getTemplateNamespace(),
             'useStatements' => implode(PHP_EOL, $useStatements),
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
@@ -109,7 +107,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
     {
         $tableName = $this->getExternalConfigValue(
                 $reflectionClass,
-                ExternalBundleConfigInterface::DB_TABLE_NAME
+                ExternalBundleConfigInterface::DB_TABLE_SETTING_NAME
             ) ?? $reflectionClass->getShortName();
 
         $tablePrefix = $this->getExternalConfigValue(

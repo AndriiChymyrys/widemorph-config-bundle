@@ -65,6 +65,14 @@ class FileManager implements FileManagerInterface
     /**
      * {@inheritDoc}
      */
+    public function getPublishToFilePath(string $toPath, string $filePath): string
+    {
+        return sprintf('%s/%s', $this->getPublishToPath($toPath), $filePath);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function exists(string $path): bool
     {
         return $this->fileSystem->exists($path);
@@ -83,13 +91,21 @@ class FileManager implements FileManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function scanDir(string $path): array
+    public function scanDir(string $rootPath, array $foundFiles = [], string $itemRelPath = ''): array
     {
-        $content = array_diff(scandir($path), ['.', '..']);
+        $paths = array_diff(scandir($rootPath), ['.', '..']);
 
-        return array_filter($content, static function (string $item) use ($path) {
-            return !is_dir($path . '/' . $item);
-        });
+        foreach ($paths as $item) {
+            $itemPath = $rootPath . '/' . $item;
+
+            if (is_dir($itemPath)) {
+                $foundFiles += $this->scanDir($itemPath, $foundFiles, $item);
+            } else {
+                $foundFiles[] = new FilePath($rootPath, ($itemRelPath ? $itemRelPath . '/' : '') . $item);
+            }
+        }
+
+        return $foundFiles;
     }
 
     /**

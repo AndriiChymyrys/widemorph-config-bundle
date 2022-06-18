@@ -9,6 +9,7 @@ use ReflectionMethod;
 use ReflectionException;
 use JetBrains\PhpStorm\ArrayShape;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Exception\PublishTypeException;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FilePathInterface;
 
 /**
  * Class PublishRepositoryService
@@ -23,31 +24,33 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
      * @throws ReflectionException|PublishTypeException
      */
     public function run(
+        FilePathInterface $filePath,
         string $bundleFileNameSpace,
         string $publishBundlePath,
         array $bundleConfig
     ): void {
-        $files = $this->fileManager->scanDir($publishBundlePath);
+        $reflection = $this->getClassReflection(
+            $bundleFileNameSpace,
+            $filePath->getRelativeNameSpace()
+        );
 
-        foreach ($files as $fileName) {
-            $reflection = $this->getClassReflection(
-                $bundleFileNameSpace,
-                $fileName
+        $constructor = $reflection->getConstructor();
+
+        if ($constructor) {
+            [$relativeEntityName, $absolutePath] = $this->getEntityPublishPath(
+                $filePath,
+                $reflection,
+                $constructor,
+                $bundleFileNameSpace
             );
 
-            $constructor = $reflection->getConstructor();
-
-            if ($constructor) {
-                [$relativeEntityName, $absolutePath] = $this->getEntityPublishPath($reflection, $constructor, $bundleFileNameSpace);
-
-                if ($this->fileManager->exists($absolutePath)) {
-                    $this->generator->generateFile(
-                        $fileName,
-                        $this->getPublishToPath(),
-                        $this->getPlaceholders($reflection, $relativeEntityName),
-                        $this->getType() . '.tpl.php'
-                    );
-                }
+            if ($this->fileManager->exists($absolutePath)) {
+                $this->generator->generateFile(
+                    $filePath->getRelativePath(),
+                    $this->getPublishToPath(),
+                    $this->getPlaceholders($reflection, $relativeEntityName, $filePath),
+                    $this->getType() . '.tpl.php'
+                );
             }
         }
     }
@@ -91,8 +94,11 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
         'useStatements' => "string",
         'entityName' => "false|string"
     ])]
-    protected function getPlaceholders(ReflectionClass $reflectionClass, string $relativeEntityName): array
-    {
+    protected function getPlaceholders(
+        ReflectionClass $reflectionClass,
+        string $relativeEntityName,
+        FilePathInterface $filePath
+    ): array {
         $baseClassName = 'Base' . $reflectionClass->getShortName();
 
         $useStatements = [
@@ -103,7 +109,7 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
         $entityName = explode('\\', $relativeEntityName);
 
         return [
-            'namespace' => 'App\\Repository',
+            'namespace' => 'App\\Repository' . $filePath->getTemplateNamespace(),
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
             'useStatements' => implode(PHP_EOL, $useStatements),
@@ -112,15 +118,18 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
     }
 
     /**
+     * @param FilePathInterface $filePath
      * @param ReflectionClass $reflectionClass
      * @param ReflectionMethod $constructor
      * @param string $bundleFileNameSpace
      *
      * @return array
      *
-     * @throws PublishTypeException|ReflectionException
+     * @throws PublishTypeException
+     * @throws ReflectionException
      */
     protected function getEntityPublishPath(
+        FilePathInterface $filePath,
         ReflectionClass $reflectionClass,
         ReflectionMethod $constructor,
         string $bundleFileNameSpace
@@ -152,7 +161,7 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
             $this->fileManager->getPublishToPath(
                 PublishEntityServiceInterface::ENTITY_PUBLISH_TO_PATH
             ),
-            $relativeEntityName
+            str_replace('\\', '/', $relativeEntityName)
         );
 
         return [$relativeEntityName, $absolutePath];

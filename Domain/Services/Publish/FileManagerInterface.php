@@ -38,6 +38,14 @@ interface FileManagerInterface
     public function getPublishToPath(string $toPath): string;
 
     /**
+     * @param string $toPath
+     * @param string $filePath
+     *
+     * @return string
+     */
+    public function getPublishToFilePath(string $toPath, string $filePath): string;
+
+    /**
      * @return string
      */
     public function getTemplateFolder(): string;
@@ -58,11 +66,13 @@ interface FileManagerInterface
     public function copyIfNotExists(string $from, string $to): void;
 
     /**
-     * @param string $path
+     * @param string $rootPath
+     * @param array $foundFiles
+     * @param string $itemRelPath
      *
-     * @return array
+     * @return FilePathInterface[]
      */
-    public function scanDir(string $path): array;
+    public function scanDir(string $rootPath, array $foundFiles = [], string $itemRelPath = ''): array;
 
     /**
      * @param string $fileName

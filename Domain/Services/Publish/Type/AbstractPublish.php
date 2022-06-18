@@ -7,6 +7,7 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 use ReflectionClass;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FilePathInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface;
 
 /**
@@ -42,11 +43,23 @@ abstract class AbstractPublish implements PublishInterface
         );
 
         if ($this->fileManager->exists($publishBundlePath)) {
-            $this->run($bundleNameSpace, $publishBundlePath, $bundleConfig);
+            $files = $this->fileManager->scanDir($publishBundlePath);
+
+            foreach ($files as $filePath) {
+                $absolutePath = $this->fileManager->getPublishToFilePath(
+                    $this->getPublishToPath(),
+                    $filePath->getRelativePath()
+                );
+
+                if (!$this->fileManager->exists($absolutePath)) {
+                    $this->run($filePath, $bundleNameSpace, $publishBundlePath, $bundleConfig);
+                }
+            }
         }
     }
 
     /**
+     * @param FilePathInterface $filePath
      * @param string $bundleFileNameSpace
      * @param string $publishBundlePath
      * @param array $bundleConfig
@@ -54,6 +67,7 @@ abstract class AbstractPublish implements PublishInterface
      * @return void
      */
     public function run(
+        FilePathInterface $filePath,
         string $bundleFileNameSpace,
         string $publishBundlePath,
         array $bundleConfig
