@@ -5,6 +5,11 @@
             "WideMorph\\Morph\\Bundle\\MorphConfigBundle\\": ""
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "WideMorph\\Morph\\Bundle\\MorphConfigBundle\\Tests\\": "Tests/"
+        }
+    },
     "require": {
         "symfony/filesystem": "6.0.*"
     }

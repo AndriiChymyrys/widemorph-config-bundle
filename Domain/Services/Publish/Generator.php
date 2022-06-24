@@ -26,9 +26,9 @@ class Generator implements GeneratorInterface
         $toPath = $this->fileManager->getPublishToPath($publishToPath);
         $files = $this->fileManager->scanDir($publishBundlePath);
 
-        foreach ($files as $fileName) {
-            $filePathFrom = $publishBundlePath . '/' . $fileName;
-            $filePathTo = $toPath . '/' . $fileName;
+        foreach ($files as $filePath) {
+            $filePathFrom = $publishBundlePath . '/' . $filePath->getRelativePath();
+            $filePathTo = $toPath . '/' . $filePath->getRelativePath();
 
             $this->fileManager->copyIfNotExists($filePathFrom, $filePathTo);
         }

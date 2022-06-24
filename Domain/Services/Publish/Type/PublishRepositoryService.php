@@ -38,7 +38,6 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
 
         if ($constructor) {
             [$relativeEntityName, $absolutePath] = $this->getEntityPublishPath(
-                $filePath,
                 $reflection,
                 $constructor,
                 $bundleFileNameSpace
@@ -118,7 +117,6 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
     }
 
     /**
-     * @param FilePathInterface $filePath
      * @param ReflectionClass $reflectionClass
      * @param ReflectionMethod $constructor
      * @param string $bundleFileNameSpace
@@ -129,7 +127,6 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
      * @throws ReflectionException
      */
     protected function getEntityPublishPath(
-        FilePathInterface $filePath,
         ReflectionClass $reflectionClass,
         ReflectionMethod $constructor,
         string $bundleFileNameSpace
