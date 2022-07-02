@@ -16,6 +16,9 @@
             <argument type="service"
                       key="$externalBundleConfig"
                       id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface"/>
+            <argument type="service"
+                      key="$docBlockParser"
+                      id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\DocBlockParserInterface"/>
         </service>
 
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type\PublishEntityService"
@@ -69,5 +72,10 @@
         </service>
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface"
                  alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfig"/>
+
+        <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\DocBlockParser"/>
+        <service
+                id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\DocBlockParserInterface"
+                alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\DocBlockParser"/>
     </services>
 </container>

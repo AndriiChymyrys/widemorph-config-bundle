@@ -22,4 +22,7 @@ interface PublishEntityServiceInterface extends PublishInterface
 
     /** @var string */
     public const ENTITY_BUNDLE_NAMESPACE = 'Infrastructure\\Entity';
+
+    /** @var string */
+    public const META_REPOSITORY_CLASS_NAME = 'repositoryClass';
 }

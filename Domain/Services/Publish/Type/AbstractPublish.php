@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 
 use ReflectionClass;
-use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
-use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FilePathInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\GeneratorInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\DocBlockParserInterface;
 
 /**
  * Class AbstractPublish
@@ -21,11 +22,13 @@ abstract class AbstractPublish implements PublishInterface
      * @param FileManagerInterface $fileManager
      * @param GeneratorInterface $generator
      * @param ExternalBundleConfigInterface $externalBundleConfig
+     * @param DocBlockParserInterface $docBlockParser
      */
     public function __construct(
         protected FileManagerInterface $fileManager,
         protected GeneratorInterface $generator,
-        protected ExternalBundleConfigInterface $externalBundleConfig
+        protected ExternalBundleConfigInterface $externalBundleConfig,
+        protected DocBlockParserInterface $docBlockParser
     ) {
     }
 
@@ -114,5 +117,18 @@ abstract class AbstractPublish implements PublishInterface
         }
 
         return $configValue;
+    }
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @param string $name
+     *
+     * @return string|null
+     */
+    protected function getMetaFromClassDoc(ReflectionClass $reflectionClass, string $name): ?string
+    {
+        $classDoc = $reflectionClass->getDocComment();
+
+        return $this->docBlockParser->getMetaByName($classDoc, $name);
     }
 }

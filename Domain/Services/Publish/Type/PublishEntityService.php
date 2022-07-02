@@ -6,8 +6,8 @@ namespace WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\Type;
 
 use ReflectionClass;
 use JetBrains\PhpStorm\ArrayShape;
-use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FilePathInterface;
+use WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\ExternalBundleConfigInterface;
 
 /**
  * Class PublishEntityService
@@ -80,6 +80,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         'className' => 'string',
         'baseClassName' => 'string',
         'tableName' => 'string',
+        'repositoryClass' => 'string',
     ])]
     protected function preparePlaceholders(ReflectionClass $reflectionClass, FilePathInterface $filePath): array
     {
@@ -95,6 +96,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
             'tableName' => $this->getTableName($reflectionClass),
+            'repositoryClass' => $this->getMetaFromClassDoc($reflectionClass, static::META_REPOSITORY_CLASS_NAME)
         ];
     }
 
