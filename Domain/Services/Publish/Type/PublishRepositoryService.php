@@ -47,7 +47,7 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
                 $this->generator->generateFile(
                     $filePath->getRelativePath(),
                     $this->getPublishToPath(),
-                    $this->getPlaceholders($reflection, $relativeEntityName, $filePath),
+                    $this->getPlaceholders($reflection, $relativeEntityName, $filePath, $constructor),
                     $this->getType() . '.tpl.php'
                 );
             }
@@ -91,12 +91,15 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
         'className' => "string",
         'baseClassName' => "string",
         'useStatements' => "string",
-        'entityName' => "false|string"
+        'entityName' => "false|string",
+        'arguments' => "string",
+        'parentArguments' => "string",
     ])]
     protected function getPlaceholders(
         ReflectionClass $reflectionClass,
         string $relativeEntityName,
-        FilePathInterface $filePath
+        FilePathInterface $filePath,
+        ReflectionMethod $constructor
     ): array {
         $baseClassName = 'Base' . $reflectionClass->getShortName();
 
@@ -107,12 +110,17 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
 
         $entityName = explode('\\', $relativeEntityName);
 
+        [$use, $params] = $this->getArguments($constructor);
+        $useStatements = array_merge($useStatements, $use);
+
         return [
             'namespace' => 'App\\Repository' . $filePath->getTemplateNamespace(),
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
             'useStatements' => implode(PHP_EOL, $useStatements),
-            'entityName' => end($entityName)
+            'entityName' => end($entityName),
+            'arguments' => implode(', ', array_values($params)),
+            'parentArguments' => implode(', ', array_keys($params)),
         ];
     }
 
@@ -132,17 +140,23 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
         string $bundleFileNameSpace
     ): array {
         $params = $constructor->getParameters();
+        $entityNameSpace = null;
 
-        if (count($params) < 2) {
+        foreach ($params as $param) {
+            if ($param->getName() === static::ENTITY_CLASS_REPOSITORY_PARAMETER_NAME) {
+                $entityNameSpace = $param->getDefaultValue();
+            }
+        }
+
+        if (!$entityNameSpace) {
             throw new PublishTypeException(
                 sprintf(
-                    'Second parameter of repository constructor should be specified with default value "string $entityClass = Entity::class", Found in %s',
+                    'Required parameter for repository class is "%s", found in "%s"',
+                    static::ENTITY_CLASS_REPOSITORY_PARAMETER_NAME,
                     $reflectionClass->getName()
                 )
             );
         }
-
-        $entityNameSpace = $params[1]->getDefaultValue();
 
         $bundleReflection = new ReflectionClass($bundleFileNameSpace);
         $replacePath = sprintf(
@@ -162,5 +176,31 @@ class PublishRepositoryService extends AbstractPublish implements PublishReposit
         );
 
         return [$relativeEntityName, $absolutePath];
+    }
+
+    /**
+     * @param ReflectionMethod $constructor
+     *
+     * @return array
+     */
+    protected function getArguments(ReflectionMethod $constructor): array
+    {
+        $use = [];
+        $params = [];
+
+        foreach ($constructor->getParameters() as $param) {
+            if ($param->getName() === static::ENTITY_CLASS_REPOSITORY_PARAMETER_NAME) {
+                continue;
+            }
+
+            $type = $param->getType();
+            $names = explode('\\', $type->getName());
+            $varName = '$' . $param->getName();
+            $params[$varName] = sprintf('%s %s' , $names[array_key_last($names)], $varName);
+
+            $use[] = 'use ' . $type->getName() . ';';
+        }
+
+        return [$use, $params];
     }
 }

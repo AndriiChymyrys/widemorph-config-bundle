@@ -21,4 +21,7 @@ interface PublishRepositoryServiceInterface
 
     /** @var string */
     public const REPOSITORY_BUNDLE_NAMESPACE = 'Infrastructure\\Repository';
+
+    /** @var string */
+    public const ENTITY_CLASS_REPOSITORY_PARAMETER_NAME = 'entityClass';
 }
