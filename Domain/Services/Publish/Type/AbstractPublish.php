@@ -123,9 +123,9 @@ abstract class AbstractPublish implements PublishInterface
      * @param ReflectionClass $reflectionClass
      * @param string $name
      *
-     * @return string|null
+     * @return null|string|bool
      */
-    protected function getMetaFromClassDoc(ReflectionClass $reflectionClass, string $name): ?string
+    protected function getMetaFromClassDoc(ReflectionClass $reflectionClass, string $name): null|string|bool
     {
         $classDoc = $reflectionClass->getDocComment();
 

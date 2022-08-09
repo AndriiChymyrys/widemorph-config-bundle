@@ -81,6 +81,7 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
         'baseClassName' => 'string',
         'tableName' => 'string',
         'repositoryClass' => 'string',
+        'hasLifecycleCallbacks' => 'string',
     ])]
     protected function preparePlaceholders(ReflectionClass $reflectionClass, FilePathInterface $filePath): array
     {
@@ -96,7 +97,8 @@ class PublishEntityService extends AbstractPublish implements PublishEntityServi
             'className' => $reflectionClass->getShortName(),
             'baseClassName' => $baseClassName,
             'tableName' => $this->getTableName($reflectionClass),
-            'repositoryClass' => $this->getMetaFromClassDoc($reflectionClass, static::META_REPOSITORY_CLASS_NAME)
+            'repositoryClass' => $this->getMetaFromClassDoc($reflectionClass, static::META_REPOSITORY_CLASS_NAME),
+            'hasLifecycleCallbacks' => $this->getMetaFromClassDoc($reflectionClass, static::META_HAS_LIFECYCLE_CALLBACK_FLAG_NAME),
         ];
     }
 

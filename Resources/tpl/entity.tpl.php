@@ -12,6 +12,9 @@ namespace <?= $namespace ?>;
 <?php else: ?>
  * @ORM\Entity()
 <?php endif; ?>
+<?php if ($hasLifecycleCallbacks) : ?>
+ * @ORM\HasLifecycleCallbacks()
+<?php endif; ?>
  * @ORM\Table(name="<?= $tableName ?>")
  */
 class <?= $className ?> extends <?= $baseClassName ?><?= PHP_EOL ?>

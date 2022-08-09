@@ -25,4 +25,7 @@ interface PublishEntityServiceInterface extends PublishInterface
 
     /** @var string */
     public const META_REPOSITORY_CLASS_NAME = 'repositoryClass';
+
+    /** @var string */
+    public const META_HAS_LIFECYCLE_CALLBACK_FLAG_NAME = 'hasLifecycleCallbacks';
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace WideMorph\Morph\Bundle\MorphConfigBundle;
 
-use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use WideMorph\Morph\Bundle\MorphConfigBundle\Infrastructure\DependencyInjection\MorphConfigExtension;
 
 /**

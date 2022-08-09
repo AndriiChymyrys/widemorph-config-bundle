@@ -15,7 +15,7 @@ interface DocBlockParserInterface
      * @param string $doc
      * @param string $name
      *
-     * @return string|null
+     * @return null|string|bool
      */
-    public function getMetaByName(string $doc, string $name): ?string;
+    public function getMetaByName(string $doc, string $name): null|string|bool;
 }
