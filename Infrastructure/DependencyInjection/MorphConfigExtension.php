@@ -37,6 +37,6 @@ class MorphConfigExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $definition = $container->getDefinition(BundleCrawlerService::class);
-        $definition->replaceArgument(0, $config['publish_bundle']);
+        $definition->replaceArgument('$wmBundles', $config['publish_bundle']);
     }
 }

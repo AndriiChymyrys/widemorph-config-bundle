@@ -43,7 +43,7 @@
                  alias="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\PublishFactory"/>
 
         <service id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\BundleCrawlerService">
-            <argument></argument> <!-- will be filled in with publish_bundle dynamically -->
+            <argument key="$wmBundles"/>
             <argument type="service"
                       key="$fileManager"
                       id="WideMorph\Morph\Bundle\MorphConfigBundle\Domain\Services\Publish\FileManagerInterface"/>
