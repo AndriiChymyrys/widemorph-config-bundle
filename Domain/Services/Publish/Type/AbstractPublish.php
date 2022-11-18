@@ -129,6 +129,10 @@ abstract class AbstractPublish implements PublishInterface
     {
         $classDoc = $reflectionClass->getDocComment();
 
+        if (!$classDoc) {
+            return null;
+        }
+
         return $this->docBlockParser->getMetaByName($classDoc, $name);
     }
 }

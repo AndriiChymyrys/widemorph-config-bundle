@@ -99,7 +99,8 @@ class FileManager implements FileManagerInterface
             $itemPath = $rootPath . '/' . $item;
 
             if (is_dir($itemPath)) {
-                $foundFiles += $this->scanDir($itemPath, $foundFiles, $item);
+                $subFolder = $itemRelPath ? $itemRelPath . '/' . $item : $item;
+                $foundFiles += $this->scanDir($itemPath, $foundFiles, $subFolder);
             } else {
                 $foundFiles[] = new FilePath($rootPath, ($itemRelPath ? $itemRelPath . '/' : '') . $item);
             }
