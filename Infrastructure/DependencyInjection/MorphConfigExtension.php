@@ -30,7 +30,6 @@ class MorphConfigExtension extends Extension
         $loader->load('interaction.xml');
         $loader->load('infrastructure.xml');
         $loader->load('domain.xml');
-        $loader->load('services.xml');
 
         $configuration = new Configuration();
 
